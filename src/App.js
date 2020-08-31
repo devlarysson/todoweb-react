@@ -39,7 +39,7 @@ class App extends React.Component {
   }
 
   fetchTasks() {
-    fetch('http://192.168.18.19:4444/tasks/')
+    fetch('http://192.168.18.16:4444/tasks/')
       .then((response) => response.json())
       .then((data) =>
         this.setState({
@@ -70,14 +70,13 @@ class App extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
-
     const csrftoken = this.getCookie('csrftoken');
 
-    var url = 'http://192.168.18.19:4444/tasks/';
+    var url = 'http://192.168.18.16:4444/tasks/';
     var method = 'POST';
 
     if (this.state.editing) {
-      url = `http://192.168.18.19:4444/tasks/${this.state.activeItem.id}/`;
+      url = `http://192.168.18.16:4444/tasks/${this.state.activeItem.id}/`;
       method = 'PUT';
       this.setState({
         editing: false,
@@ -111,7 +110,7 @@ class App extends React.Component {
 
   deleteItem(task) {
     const csrftoken = this.getCookie('csrftoken');
-    const url = `http://192.168.18.19:4444/tasks/${task.id}/`;
+    const url = `http://192.168.18.16:4444/tasks/${task.id}/`;
 
     fetch(url, {
       method: 'DELETE',
@@ -127,8 +126,12 @@ class App extends React.Component {
   strikeUnstrike(task) {
     task.completed = !task.completed;
 
+    if (!task.completed) {
+      task.completed_date = null
+    }
+
     const csrftoken = this.getCookie('csrftoken');
-    const url = `http://192.168.18.19:4444/tasks/${task.id}/`;
+    const url = `http://192.168.18.16:4444/tasks/${task.id}/`;
 
     fetch(url, {
       method: 'PUT',
@@ -183,10 +186,10 @@ class App extends React.Component {
                     style={{ flex: 7 }}>
                     {task.completed ? (
                       <div>
-                        <strike>{task.title}</strike>
+                        <s>{task.title}</s>
                         <div className="task-detail">
-                          <span>Created : {task.create_date}</span>
-                          <span>completed : {task.completed_date}</span>
+                          <span>Created : {task.create_date}</span> <br/>
+                          <span>Completed : {task.completed_date}</span>
                         </div>
                       </div>
                     ) : (
