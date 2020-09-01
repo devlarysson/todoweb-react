@@ -2,6 +2,8 @@ import React from 'react';
 import './App.css';
 
 class App extends React.Component {
+  baseUrl = 'https://todolist-djangoapi.herokuapp.com'
+
   constructor(props) {
     super(props);
     this.state = {
@@ -39,7 +41,7 @@ class App extends React.Component {
   }
 
   fetchTasks() {
-    fetch('http://192.168.18.16:4444/tasks/')
+    fetch(`${this.baseUrl}/tasks/`)
       .then((response) => response.json())
       .then((data) =>
         this.setState({
@@ -72,11 +74,12 @@ class App extends React.Component {
     e.preventDefault();
     const csrftoken = this.getCookie('csrftoken');
 
-    var url = 'http://192.168.18.16:4444/tasks/';
+    var url = `${this.baseUrl}/tasks/`;
     var method = 'POST';
 
     if (this.state.editing) {
-      url = `http://192.168.18.16:4444/tasks/${this.state.activeItem.id}/`;
+      const { id } = this.state.activeItem
+      url = `${url}${id}/`;
       method = 'PUT';
       this.setState({
         editing: false,
@@ -110,7 +113,7 @@ class App extends React.Component {
 
   deleteItem(task) {
     const csrftoken = this.getCookie('csrftoken');
-    const url = `http://192.168.18.16:4444/tasks/${task.id}/`;
+    const url = `${this.baseUrl}/tasks/${task.id}/`;
 
     fetch(url, {
       method: 'DELETE',
@@ -131,7 +134,7 @@ class App extends React.Component {
     }
 
     const csrftoken = this.getCookie('csrftoken');
-    const url = `http://192.168.18.16:4444/tasks/${task.id}/`;
+    const url = `${this.baseUrl}/tasks/${task.id}/`;
 
     fetch(url, {
       method: 'PUT',
